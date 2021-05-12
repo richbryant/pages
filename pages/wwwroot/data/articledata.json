@@ -27,6 +27,6 @@
     },
     "snippet": "I hate NullReferenceExceptions. There's a very simple reason why you don't get it in Rx, of course, and that's because both IEnumerable and IObservable are a sort of a collection, and a collection is special in LINQ and Functional Programming terms because of how you apply functions to it...",
     "title": "On Elevated Values",
-    "link": "article-elevated-values"
+    "link": "article/elevated-values"
   }
 ]
