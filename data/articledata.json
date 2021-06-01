@@ -28,5 +28,15 @@
     "snippet": "I hate NullReferenceExceptions. There's a very simple reason why you don't get it in Rx, of course, and that's because both IEnumerable and IObservable are a sort of a collection, and a collection is special in LINQ and Functional Programming terms because of how you apply functions to it...",
     "title": "On Elevated Values",
     "link": "article/elevated-values"
+  },
+  {
+    "thumbnail": "https://i.imgur.com/r0ilni7.png",
+    "metadata": {
+      "date": "06/01/2021",
+      "time": "12:21:00"
+    },
+    "snippet": "Linq2Db is one of my favourite libraries. It's definitely my favourite micro-ORM and the reasons why are pretty clear - it's portable, it's thread-safe, it outperforms anything except raw ADO.NET (by latest metrics)...",
+    "title": "Fluent Mappings in Linq2Db",
+    "link": "article/linq2db-fluent-mappings"
   }
 ]

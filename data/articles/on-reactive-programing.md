@@ -1,10 +1,3 @@
----
-title: On Reactive Programming
-category: 
-  - Article
-author: Rich Bryant
----
-
 <img src="https://img.favpng.com/22/20/20/question-mark-information-clip-art-png-favpng-xUsis3eLNHY4KHfJcLDsF87rq.jpg" align="right" style="height: 8em"/>
 
 # On Reactive Programming
