@@ -25,6 +25,9 @@
     <Content Update="wwwroot\data\articles\elevated-values.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\data\articles\linq2db-fluent-mappings.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\data\articles\on-reactive-programing.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

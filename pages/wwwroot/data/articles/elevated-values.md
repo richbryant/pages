@@ -1,11 +1,4 @@
-﻿---
-title: In Praise of Elevated Values 
-category: 
-  - Article
-author: Rich Bryant
----
-
-<img src="https://i.imgur.com/i9ngTbc.png" align="right" style="height: 8em"/>
+﻿<img src="https://i.imgur.com/i9ngTbc.png" align="right" style="height: 8em"/>
 
 # In Praise of Elevated Values
 ## Always Wear Protection
