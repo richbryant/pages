@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\data\articledata.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\data\articles\compelling-example.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
