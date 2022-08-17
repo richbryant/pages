@@ -38,5 +38,15 @@
     "snippet": "Linq2Db is one of my favourite libraries. It's definitely my favourite micro-ORM and the reasons why are pretty clear - it's portable, it's thread-safe, it outperforms anything except raw ADO.NET (by latest metrics)...",
     "title": "Fluent Mappings in Linq2Db",
     "link": "article/linq2db-fluent-mappings"
+  },
+  {
+    "thumbnail": "https://i.imgur.com/A2DaKDa.png",
+    "metadata": {
+      "date": "08/17/2022",
+      "time": "21:20:00"
+    },
+    "snippet": "One of the things I enjoy most in my job is making stuff that doesn't naturally work together, work together. Let's go through the reasoning behind this....",
+    "title": "ReactiveUI, Blazorise & FluentValidation?",
+    "link": "article/fluent-tinkering"
   }
 ]
