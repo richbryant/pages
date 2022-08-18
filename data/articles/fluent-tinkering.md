@@ -5,7 +5,7 @@
   
 One of the things I enjoy most in my job is making stuff that doesn't naturally work together, work together. Let's go through the reasoning behind this.  
   
-First, I'm using Blazor (wasm) with ReactiveUI. Why ReactiveUI? Because it means all the functionality I need can be sat in its own testable C# class. And because I hate code in markup, it's messy and makes the debugger do stupid things. I'm using Blazorise because I think it's developed into the very best of the available component libraries and also because MLaden was kind enough to implement ICommand property on the `<Button>` control for me a couple of years ago when I started fiddling with all this.
+First, I'm using Blazor (wasm) with ReactiveUI. Why ReactiveUI? Because it means all the functionality I need can be sat in its own testable C# class. And because I hate code in markup, it's messy and makes the debugger do stupid things. I'm using Blazorise because I think it's developed into the very best of the available component libraries and also because Mladen was kind enough to implement ICommand property on the `<Button>` control for me a couple of years ago when I started fiddling with all this.
 
 FluentValidation because we're already using FluentValidation, the team know it and they're comfortable with it. So when I - in my tech lead capacity - blow their minds with new stuff, I like to try to keep it familiar. So let's take a practical case.  Here's a RegisterModel -   
   
@@ -89,7 +89,10 @@ public class RegistrationViewModelValidator : AbstractValidator<RegistrationView
 }
 ```
 
-I've still the RegistrationModelValidator because obviously I need to validate at the server side too.  And then it struck me, what if I injected that validator into my ViewModel to make certain that no server call would be made if the model I was sending wasn't valid? After all, I certainly didn't want to be serialising the ViewModel and sending that over the wires, it needs functionality and stuff on it.
+
+Authors's note: Remind me to experiment with inheriting from the Model Validator, let's not repeat ourselves
+
+I've still got the RegistrationModelValidator because obviously I need to validate at the server side too.  And then it struck me, what if I injected that validator into my ViewModel to make certain that no server call would be made if the model I was sending wasn't valid? After all, I certainly didn't want to be serialising the ViewModel and sending that over the wires, it needs functionality and stuff on it.
 
 The answer is, of course, obvious to all you Rx types. `ObservableAsPropertyHelper<T>` was what I needed.
 
