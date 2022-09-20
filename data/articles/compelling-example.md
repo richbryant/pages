@@ -32,7 +32,7 @@ Yes, I could have put the viewmodels in CompellingExample.Blazor.Shared but they
 Because I needed an HttpClient calling an MVC WebApi, I put Refit on both the Blazor Client and the CompellingExample - they have to be the same, right?  I won't go into the specifics because this isn't about Refit, I could have done it any number of ways, but I like Refit.  The code's in a [GitHub repo](https://github.com/richbryant/ReactiveUI.CompellingExample) if you want to check it for errors.  
   
 This did require some wrangling of Splat, shown here in the App.xaml.cs of the WPF project:  
-
+```cs
     public partial class App
     {
         public App()
@@ -45,11 +45,12 @@ This did require some wrangling of Splat, shown here in the App.xaml.cs of the W
             
         }
     }
+```
 
 3. Wrangle Splat into Blazor
 
 Here's my Program.cs.  As you can see, I'm using [Blazorise](https://blazorise.com) mostly because I suck at CSS and styling things, and I think `<div>` is ugly.  You don't have to, obviously.  
-  
+```cs  
      public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -81,15 +82,16 @@ Here's my Program.cs.  As you can see, I'm using [Blazorise](https://blazorise.c
                 .UseFontAwesomeIcons();
 
             await host.RunAsync();
-        }
-    
-    
+        } 
+```
+
 Other than that, you don't need much.  
   
 4.  Create your views!  
   
 Here's the IndexView.razor  
-  
+
+```html  
     @page "/"
     @inherits ReactiveComponentBase<AppViewModel>
 
@@ -116,9 +118,11 @@ Here's the IndexView.razor
         }
         </main>
     </Container>
-    
+```
+
 and here's its codebehind.  
   
+```cs
     public partial class IndexView 
     {
         private bool _showResults;
@@ -153,9 +157,11 @@ and here's its codebehind.
             Console.WriteLine($"SearchResults is {ViewModel.SearchResults.Count()}");
         }
     }
+```
 
 and now the NugetDetailsView  
-  
+
+```html
     @inherits ReactiveComponentBase<NugetDetailsViewModel>
     <TableRow>
         <TableRowCell>
@@ -175,9 +181,11 @@ and now the NugetDetailsView
             </footer>
         </TableRowCell>
     </TableRow>
+```
 
 and its codebehind:  
   
+```cs
     public partial class NugetDetailsView
     {
         [Parameter] 
@@ -189,6 +197,7 @@ and its codebehind:
             return base.OnParametersSetAsync();
         }
     }
+```
 
 Basic stuff.
 
@@ -196,8 +205,9 @@ You could run this now and provided you've got your controllers wired up properl
   
 ### Fugly Code  
   
-Have a look at this controller.  Yuck .  
-  
+Have a look at this controller.  Yuck .
+
+```cs  
     [Route("api/[controller]")]
     [ApiController]
     public class NugetController : ControllerBase
@@ -223,9 +233,11 @@ Have a look at this controller.  Yuck .
             }
         }
     }
+```
 
 It might just be me, but I find Try/Catch personally offensive, especially in an async method.  That **had** to go.  And it wasn't just that, either.  Take a look at the code to actually get package details, straight from the original CompellingExample.  
-  
+
+```cs
     public class NugetService : INugetService
     {
         public async Task<IEnumerable<NugetPackageDto>> GetNugetPackages(string term)
@@ -242,11 +254,13 @@ It might just be me, but I find Try/Catch personally offensive, especially in an
             return metadata.Select(x => new NugetPackageDto(x));
         }
     }
-    
+```
+
 ### Beautiful Functional C#
 
 Wow.  Imagine having to unit test that.  Horrible.  Imagine _debugging_ it.  No, it wouldn't do.  Luckily, I have another tool in my toolbox especially for horrible things like these.  It's called Functional Programming and ReactiveUI is pretty religious about it, except here for some reason.  I don't know why.  So I added a few static methods.    
-  
+
+```cs
         public static SourceRepository NuGetLocalRepository()
             => new SourceRepository(new PackageSource("https://api.nuget.org/v3/index.json"),
                 new List<Lazy<INuGetResourceProvider>>(Repository.Provider.GetCoreV3()));
@@ -262,28 +276,32 @@ Wow.  Imagine having to unit test that.  Horrible.  Imagine _debugging_ it.  No,
 
         public static async Task<IEnumerable<IPackageSearchMetadata>> GetMetadata(PackageSearchResource source, string term)
             => await source.SearchAsync(term, new SearchFilter(false), 0, 10, null, new CancellationToken());
+```
 
 each one atomic, each one easy to test.  And I added also my second favourite library ever, [Language-Ext](https://github.com/louthy/language-ext) to get some nice helper methods and structs.  
   
 And here's that `GetNugetPackages` method now.  
-  
+
+```cs
     public async Task<IEnumerable<NugetPackageDto>> GetNugetPackages(string term) =>
             await NugetFunctions.NuGetLocalRepository()
                 .GetResource()
                 .Bind(x => NugetFunctions.GetMetadata(x, term))
                 .Map(x => x.AsDtos());
+```
 
 Oh look, a Functional pipeline!  Tell me you don't prefer that.
 
 But I still had that nasty TryCatch in the controller.  Luckily for me, along with fun things like `Option<T>` which protects you from `null` and `Either<L,R>` which takes away 99% of all `if...then` statements, Language-Ext also has a `Try<T>` which performs a Try and returns either your value or a safely wrapped exception that you can deal with you choose.  And there's a `TryAsync` variant especially for asynchronous methods.  
   
 So I did this.  
-  
+```cs
     public TryAsync<IEnumerable<NugetPackageDto>> TryGetNugetPackagesAsync(string term)
             => TryAsync(GetNugetPackages(term));
+```
 
 And I still didn't want an exception in my controller method, so I put in some MVC helper statics, [which you can find here if you care](https://github.com/richbryant/ReactiveUI.CompellingExample/blob/main/CompellingExample.Blazor/Server/Extensions/ExtensionsForMvc.cs).  And that left my controller as this  
-  
+```cs
     [Route("api/[controller]")]
     [ApiController]
     public class NugetController : ControllerBase
@@ -298,7 +316,7 @@ And I still didn't want an exception in my controller method, so I put in some M
             await _nugetService.TryGetNugetPackagesAsync(term)
                 .ToActionResult();
     }
-    
+```
 Not only easy but also easy to throw in a few Functional C# improvements at the same time.  
   
 I hope you find this both useful, and a compelling example.  
